@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+
+        // --- Crucial: Ensure elements are hidden on page load ---
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('qaLoadingMessage').style.display = 'none';
+            document.querySelector('.download-options').style.display = 'none';
+        });
+        // --------------------------------------------------------
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Smart Study Assistant</h1>
+
+        <div class="section upload-section">
+            <h2>Upload Document</h2>
+            <input type="file" id="documentUpload" accept=".pdf,.txt,.docx">
+            
+            <div class="customization-options">
+                <div>
+                    <label for="summaryPoints">Summary Points:</label>
+                    <input type="number" id="summaryPoints" name="summary_points" value="5" min="1" max="10">
+                </div>
+                <div>
+                    <label for="numConcepts">Key Concepts:</label>
+                    <input type="number" id="numConcepts" name="num_concepts" value="5" min="1" max="10">
+                </div>
+                <div>
+                    <label for="numQuizQuestions">Quiz Questions:</label>
+                    <input type="number" id="numQuizQuestions" name="num_quiz_questions" value="5" min="1" max="10">
+                </div>
+                <div>
+                    <label for="numFlashcards">Flashcards:</label>
+                    <input type="number" id="numFlashcards" name="num_flashcards" value="5" min="1" max="10">
+                </div>
+            </div>
+
+            <div class="section-selection-options">
+                <h2>Select Sections to Generate:</h2>
+                <div class="toggle-group">
+                    <div class="toggle-switch-item">
+                        <input type="checkbox" id="includeSummary" name="include_summary" value="true" checked>
+                        <label for="includeSummary"><i class="fas fa-book"></i> Summary</label>
+                    </div>
+
+                    <div class="toggle-switch-item">
+                        <input type="checkbox" id="includeKeyConcepts" name="include_key_concepts" value="true" checked>
+                        <label for="includeKeyConcepts"><i class="fas fa-lightbulb"></i> Key Concepts</label>
+                    </div>
+
+                    <div class="toggle-switch-item">
+                        <input type="checkbox" id="includeTopicOutline" name="include_topic_outline" value="true" checked>
+                        <label for="includeTopicOutline"><i class="fas fa-sitemap"></i> Topic-Wise Outline</label>
+                    </div>
+
+                    <div class="toggle-switch-item">
+                        <input type="checkbox" id="includeQuizQuestions" name="include_quiz_questions" value="true" checked>
+                        <label for="includeQuizQuestions"><i class="fas fa-question-circle"></i> Quiz Questions</label>
+                    </div>
+
+                    <div class="toggle-switch-item">
+                        <input type="checkbox" id="includeFlashcards" name="include_flashcards" value="true" checked>
+                        <label for="includeFlashcards"><i class="fas fa-clone"></i> Flashcards</label>
+                    </div>
+
+                    <div class="toggle-switch-item">
+                        <input type="checkbox" id="includeKeyTakeaways" name="include_key_takeaways" value="true" checked>
+                        <label for="includeKeyTakeaways"><i class="fas fa-thumbtack"></i> Key Takeaways</label>
+                    </div>
+
+                    <div class="toggle-switch-item">
+                        <input type="checkbox" id="includeMindMap" name="include_mind_map" value="true" checked>
+                        <label for="includeMindMap"><i class="fas fa-project-diagram"></i> Mind Map</label>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="uploadDocument()">Summarize</button>
+            <div class="loading" id="loadingMessage" style="display: none;"><div class="spinner"></div> Generating study pack...</div>
+            <div class="error" id="errorMessage"></div>
+        </div>
+
+        <div class="section results-section">
+            <h2>Summarization Results</h2>
+            <div class="download-options" style="display: none;">
+                <button onclick="downloadPlainText()">Download All (Text)</button>
+            </div>
+            <div id="resultsContainer">
+                <p>Upload a PDF or text file to get started and see the magic happen!</p>
+            </div>
+        </div>
+
+        <div class="section qa-section">
+            <h2>Ask a Question</h2>
+            <textarea id="userQuestion" placeholder="Type your question here, e.g., 'What are the main causes of climate change?'"></textarea>
+            <button onclick="askQuestion()">Get Answer</button>
+            <div class="loading" id="qaLoadingMessage" style="display: none;"><div class="spinner"></div> Getting answer...</div>
+            <div class="error" id="qaErrorMessage"></div>
+            <div class="qa-results-area">
+                <h3>AI's Answer:</h3>
+                <pre id="qaAnswer">Answers to your questions will appear here.</pre>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html> 
